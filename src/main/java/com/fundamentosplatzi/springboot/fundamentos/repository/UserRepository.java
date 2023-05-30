@@ -5,6 +5,7 @@ import com.fundamentosplatzi.springboot.fundamentos.entity.User;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository // este esteriotipo lo utilizamos para pode inyectar la interface UserRepository como dependencia
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     @Query("Select u from User u where u.email=?1") //"Select u from User u where u.email=?1" va la consulta JPQL, en JPQL trabajamos a partir de objetos
     Optional<User> findByUserEmail(String email);
     @Query("Select u from User u where  u.name like ?1%") //se agrega el operador % porque hacemos un like, es decir que vamos a buscar y ordenar a partir del name
@@ -40,4 +41,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
         " and u.email=:paratroEmail")
     Optional<UserDTO> getAllByBirthDateAndEmail(@Param("parametroFecha") LocalDate date,
                                                 @Param("paratroEmail") String email);
+
+    List<User> findAll();
 }
